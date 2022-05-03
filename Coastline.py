@@ -12,7 +12,7 @@ import datetime
 
 start =datetime.datetime.now()
 # 载入提取MNDWI后的图片
-img = Image.open('../dao/image/mndwi-0.24687930.jpg')
+img = Image.open('img/mndwi-0.24687930.jpg')
 
 # 转为numpy 数组
 img = np.asarray(img)
@@ -26,9 +26,13 @@ kernel = cv2.getStructuringElement(cv2.MORPH_RECT, (7, 7))
 # 开运算
 opened = cv2.morphologyEx(img, cv2.MORPH_OPEN, kernel, iterations=17)
 
-#opened = cv2.resize(opened, (0, 0), fx=0.1, fy=0.1, interpolation=cv2.INTER_AREA)
 
-cv2.imwrite('image/opened1.png', opened)
+
+cv2.imwrite('img/opened1.png', opened)
+
+opened = cv2.resize(opened, (0, 0), fx=0.1, fy=0.1, interpolation=cv2.INTER_AREA)
+
+cv2.imwrite('img/opened2.png', opened)
 
 end = datetime.datetime.now()
 print ( 'Running time: %s Seconds' %(end-start).seconds)
@@ -57,12 +61,12 @@ def filling(image, size, num):
 
 
 
-img1 = Image.open('image/opened.png')
+img1 = Image.open('img/opened2.png')
 img1 = np.asarray(img1)
 img1=cv2.cvtColor(img1,cv2.COLOR_BGR2GRAY)#将图像转化为灰度图像
 
 img1 = filling(img1, 10000, 255)
-cv2.imwrite('image/samall1.png', img1)  # 填充海水部分
+cv2.imwrite('img/samall1.png', img1)  # 填充海水部分
 
 #img1 = 0
 
@@ -70,13 +74,13 @@ cv2.imwrite('image/samall1.png', img1)  # 填充海水部分
 # img2 = np.asarray(img2)
 
 img2 = filling(img1, 10000, 0)
-cv2.imwrite('image/samall2.png', img2)  # 填充陆地部分
+cv2.imwrite('img/samall2.png', img2)  # 填充陆地部分
 
 img1=0
 
 # 中值滤波降噪
 medianBlur = cv2.medianBlur(img2, 11)
-cv2.imwrite('image/medianBlur.png',medianBlur)
+cv2.imwrite('img/medianBlur.png',medianBlur)
 
 # 高斯滤波
 guass = cv2.GaussianBlur(medianBlur, (3, 3), 0)
@@ -85,7 +89,7 @@ medianBlur=0
 # Canny算子
 canny = cv2.Canny(guass, 50, 150)
 
-cv2.imwrite('image/canny1.png', canny)
+cv2.imwrite('img/canny_3x3.png', canny)
 end = datetime.datetime.now()
 print ( 'Running time: %s Seconds' %(end-start).seconds)
 # canny=0
